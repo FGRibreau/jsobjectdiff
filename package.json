@@ -1,0 +1,20 @@
+{
+  "name": "jsobject-diff",
+  "version": "1.0.0",
+  "description": "compare object files",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests/*.test.js"
+  },
+  "author": "Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com/)",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.5.0",
+    "lodash": "^2.4.1",
+    "optimist": "^0.6.1"
+  },
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "mocha": "^2.0.1"
+  }
+}

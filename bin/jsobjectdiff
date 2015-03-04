@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+
+var jsobjectDiff = require('../');
+var _ = require('lodash');
+
+function collect(val, memo) {
+  memo.push(val);
+  return memo;
+}
+
+var files = _.rest(process.argv, 3);
+
+if (!files || !Array.isArray(files)) {
+  console.log('files should be defined');
+  process.exit(1);
+}
+
+var filesWithExtract = files.map(function (filepath) {
+  return {
+    filepath: filepath,
+    extract: function (object) {
+      return object.i18n[_.first(_.last(filepath.split('/')).split('.'))];
+    }
+  };
+});
+
+var diff = jsobjectDiff.compare(filesWithExtract);
+if (diff.length === 0) {
+  process.exit(0);
+}
+
+console.log('Diff : ');
+console.log(JSON.stringify(diff, null, 2));
+process.exit(diff.length);
