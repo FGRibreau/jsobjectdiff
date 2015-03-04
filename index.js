@@ -1,10 +1,27 @@
 'use strict';
 var fs = require('fs');
 var vm = require('vm');
-var _ = require('lodash');
+var _  = require('lodash');
 
-var PRE = '(function (Bringr) {'; // @todo make this configurable
-var POST = 'return Bringr;})({});'; // @todo make this configurable
+var json = {};
+
+process.argv.forEach(function (val, index, array) {
+  if(val = '--PRE'){
+    json.PRE = array[++index];
+  }
+
+  if(val = '--POST'){
+    json.POST = array[++index]
+  }
+
+  if(val = '--OBJECT_PATH'){
+    paths = array[++index].split(",");
+  }
+
+});
+var PRE   ; // @todo make this configurable
+var POST  ; // @todo make this configurable
+var OBJECT;
 
 module.exports = {
   /**
