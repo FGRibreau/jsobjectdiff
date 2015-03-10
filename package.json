@@ -1,5 +1,5 @@
 {
-  "name": "jsobject-diff",
+  "name": "jsobjectdiff",
   "version": "1.0.0",
   "description": "compare object files",
   "main": "index.js",

@@ -1,4 +1,4 @@
-jsobject-diff
+jsobjectdiff
 -------------
 
 Ensure that two JS files containing objects have the same keys.
