@@ -12,18 +12,13 @@ if(!json.files){
   json.files = [];
 }
 
-function collect(val, memo) {
-  memo.push(val);
-  return memo;
-}
-
 process.argv.forEach(function(val, index, array) {
   if (val == '--pre') {
-    json.pre = '(function (Bringr) {';
+    json.pre = array[++index];
   }
 
   if (val == '--post') {
-    json.post = 'return Bringr;})({});'
+    json.post = array[++index];
   }
 
   if (val == '--file1') {
@@ -39,6 +34,10 @@ process.argv.forEach(function(val, index, array) {
   }
 });
 
+if(!json.pre || !json.post){
+  console.log('pre or post not found');
+  process.exit(1);
+}
 if (!json.files || !Array.isArray(json.files) || json.files.length !== 2) {
   console.log('files should be defined');
   process.exit(1);
