@@ -4,12 +4,13 @@ var jsobjectDiff = require('../');
 var _            = require('lodash');
 var fs           = require('fs');
 
-var json = {};
 
-json = JSON.parse(fs.readFileSync('../config.json', 'utf8'));
-
-if(!json.files){
-  json.files = [];
+//try catch
+try {
+  var json = JSON.parse(fs.readFileSync('../config.json', 'utf8'));
+}
+catch(err){
+  var json = {};
 }
 
 process.argv.forEach(function(val, index, array) {
@@ -21,12 +22,8 @@ process.argv.forEach(function(val, index, array) {
     json.post = array[++index];
   }
 
-  if (val == '--file1') {
-    json.files[0] = JSON.parse(array[++index]);
-  }
-
-  if (val == '--file2') {
-    json.files[1] = JSON.parse(array[++index]);
+  if (val == '--files') {
+    json.files = JSON.parse(array[++index]);
   }
 
   if (val == '--save') {
@@ -38,7 +35,7 @@ if(!json.pre || !json.post){
   console.log('pre or post not found');
   process.exit(1);
 }
-if (!json.files || !Array.isArray(json.files) || json.files.length !== 2) {
+if (!json.files || !Array.isArray(json.files) || json.files.length !== 1) {
   console.log('files should be defined');
   process.exit(1);
 }

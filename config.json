@@ -9,6 +9,6 @@
       "i18n.fr_FR"
     ]
   ],
-  "pre": "(function (Bringr) {",
+  "pre": "(function(Bringr){",
   "post": "return Bringr;})({});"
 }
