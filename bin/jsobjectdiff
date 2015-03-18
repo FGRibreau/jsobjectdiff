@@ -1,66 +1,62 @@
 #!/usr/bin/env node
 
+'use strict';
+
 var jsobjectDiff = require('../');
-var _            = require('lodash');
-var fs           = require('fs');
+var _ = require('lodash');
+var fs = require('fs');
+var path = require('path');
+var when = require('when');
+
+var program = require('commander');
+
+var opts = require('nomnom')
+  .option('config', {
+    abbr: 'c',
+    required: true,
+    help: 'JSON configuration path'
+  })
+  .parse();
 
 
-//try catch
-try {
-  var json = JSON.parse(fs.readFileSync('../config.json', 'utf8'));
-}
-catch(err){
-  var json = {};
-}
+var FULL_CONFIG_PATH = path.resolve(process.cwd(), opts.config);
 
-process.argv.forEach(function(val, index, array) {
-  if (val == '--pre') {
-    json.pre = array[++index];
-  }
-
-  if (val == '--post') {
-    json.post = array[++index];
-  }
-
-  if (val == '--files') {
-    json.files = JSON.parse(array[++index]);
-  }
-
-  if (val == '--save') {
-    fs.writeFileSync('../config.json', JSON.stringify(json, null, 2));
-  }
-});
-
-if(!json.pre || !json.post){
-  console.log('pre or post not found');
-  process.exit(1);
-}
-if (!json.files || !Array.isArray(json.files) || json.files.length !== 1) {
-  console.log('files should be defined');
-  process.exit(1);
-}
-
-var filesWithExtract = json.files.map(function(fileTab) {
-  return {
-    filepath: fileTab[0],
-    objectpath: fileTab[1].split('.'),
-    extract: function(object) {
-      function findObject(object, path, i) {
-        if (i < path.length - 1) {
-          return findObject(object[path[i]], path, ++i);
-        }
-        return object[path[i]];
+when
+  .promise(function (resolve, reject) {
+    fs.readFile(FULL_CONFIG_PATH, 'utf8', function (err, data) {
+      if (err) {
+        reject(err);
+        return;
       }
-      return findObject(object,this.objectpath, 0);
-    }
-  };
-});
 
-var diff = jsobjectDiff.compare(json.pre, filesWithExtract, json.post);
-if (diff.length === 0) {
-  process.exit(0);
-}
+      resolve(data);
+    });
+  })
+  .then(function onSuccess(data) {
+    when.try(JSON.parse, data).then(function onSuccess(json) {
 
-console.log('Diff : ');
-console.log(JSON.stringify(diff, null, 2));
-process.exit(diff.length);
+      var configuration = json.files.map(function (file) {
+        var absolutePath = path.resolve(path.dirname(FULL_CONFIG_PATH), file.filePath);
+        return {
+          objectPath: file.objectPath,
+          content: fs.readFileSync(absolutePath).toString('utf8')
+        };
+      });
+
+      var diff = jsobjectDiff.compare(json.pre, configuration, json.post);
+
+      if (diff.length === 0) {
+        process.exit(0);
+      }
+
+      console.info('Diff:', JSON.stringify(diff, null, 2));
+      process.exit(diff.length);
+
+    }, function onError(err) {
+      console.error('Could not parse %s', FULL_CONFIG_PATH);
+      console.error(err);
+    });
+  }, function onError(err) {
+    console.error('Could not open %s', FULL_CONFIG_PATH);
+    console.error(err);
+  });

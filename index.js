@@ -1,8 +1,7 @@
 'use strict';
-var fs = require('fs');
-var _  = require('lodash');
-
-var OBJECT;
+var _ = require('lodash');
+var objectPath = require('object-path');
+var assert = require('assert');
 
 module.exports = {
   /**
@@ -10,10 +9,12 @@ module.exports = {
    * @return {Array}
    */
   compare: function (pre, files, post) {
-    var filesObjects = files.map(function (obj) {
-      var fileContent = pre + fs.readFileSync(obj.filepath).toString('utf8') + post;
-      return obj.extract(eval(fileContent));
+    var filesObjects = files.map(function (file) {
+      assert.strictEqual(typeof file.objectPath, 'string');
+      var fileContent = pre + file.content + post;
+      return objectPath.get(eval(fileContent), file.objectPath);
     });
+
     var filesKeys = filesObjects.map(function (obj) {
       return Object.keys(obj);
     });
