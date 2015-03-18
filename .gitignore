@@ -1,0 +1,8 @@
+.env
+node_modules
+.DS_Store
+npm-debug.log
+.env.test.js
+.env_test
+project.sublime-project
+project.sublime-workspace
