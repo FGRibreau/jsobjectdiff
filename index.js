@@ -1,26 +1,7 @@
 'use strict';
 var fs = require('fs');
-var vm = require('vm');
 var _  = require('lodash');
 
-var json = {};
-
-process.argv.forEach(function (val, index, array) {
-  if(val = '--PRE'){
-    json.PRE = array[++index];
-  }
-
-  if(val = '--POST'){
-    json.POST = array[++index]
-  }
-
-  if(val = '--OBJECT_PATH'){
-    paths = array[++index].split(",");
-  }
-
-});
-var PRE   ; // @todo make this configurable
-var POST  ; // @todo make this configurable
 var OBJECT;
 
 module.exports = {
@@ -28,9 +9,9 @@ module.exports = {
    * @param  {Array[Object]} files
    * @return {Array}
    */
-  compare: function (files) {
+  compare: function (pre, files, post) {
     var filesObjects = files.map(function (obj) {
-      var fileContent = PRE + fs.readFileSync(obj.filepath).toString('utf8') + POST;
+      var fileContent = pre + fs.readFileSync(obj).toString('utf8') + post;
       return obj.extract(eval(fileContent));
     });
 
