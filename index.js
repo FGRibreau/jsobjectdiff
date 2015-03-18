@@ -11,10 +11,9 @@ module.exports = {
    */
   compare: function (pre, files, post) {
     var filesObjects = files.map(function (obj) {
-      var fileContent = pre + fs.readFileSync(obj).toString('utf8') + post;
+      var fileContent = pre + fs.readFileSync(obj.filepath).toString('utf8') + post;
       return obj.extract(eval(fileContent));
     });
-
     var filesKeys = filesObjects.map(function (obj) {
       return Object.keys(obj);
     });

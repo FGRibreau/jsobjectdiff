@@ -4,7 +4,13 @@ var jsobjectDiff = require('../');
 var _            = require('lodash');
 var fs           = require('fs');
 
-var json = fs.readFileSync('../config.json');
+var json = {};
+
+json = JSON.parse(fs.readFileSync('../config.json', 'utf8'));
+
+if(!json.files){
+  json.files = [];
+}
 
 function collect(val, memo) {
   memo.push(val);
@@ -12,28 +18,26 @@ function collect(val, memo) {
 }
 
 process.argv.forEach(function(val, index, array) {
-  console.log(val, typeof(val));
-  if (val = '--pre') {
+  if (val == '--pre') {
     json.pre = '(function (Bringr) {';
   }
 
-  if (val = '--post') {
+  if (val == '--post') {
     json.post = 'return Bringr;})({});'
   }
 
-  if (val = '--file1') {
+  if (val == '--file1') {
     json.files[0] = JSON.parse(array[++index]);
   }
 
-  if (val = '--file2') {
+  if (val == '--file2') {
     json.files[1] = JSON.parse(array[++index]);
   }
 
-  if (val = '--save') {
-    fs.writeFile('package.json', JSON.stringify(json, null, 2));
+  if (val == '--save') {
+    fs.writeFileSync('../config.json', JSON.stringify(json, null, 2));
   }
 });
-
 
 if (!json.files || !Array.isArray(json.files) || json.files.length !== 2) {
   console.log('files should be defined');
@@ -45,13 +49,13 @@ var filesWithExtract = json.files.map(function(fileTab) {
     filepath: fileTab[0],
     objectpath: fileTab[1].split('.'),
     extract: function(object) {
-      function findObject(object, i) {
-        if (i < this.objectpath.length - 1) {
-          return findObject(object[this.objectpath[i]], ++i);
+      function findObject(object, path, i) {
+        if (i < path.length - 1) {
+          return findObject(object[path[i]], path, ++i);
         }
-        return object[this.objectpath[i]];
+        return object[path[i]];
       }
-      return findObject(object, 0)[_.first(_.last(this.filepath.split('/')).split('.'))];
+      return findObject(object,this.objectpath, 0);
     }
   };
 });
