@@ -1,20 +1,18 @@
 'use strict';
-var fs = require('fs');
-var vm = require('vm');
 var _ = require('lodash');
-
-var PRE = '(function (Bringr) {'; // @todo make this configurable
-var POST = 'return Bringr;})({});'; // @todo make this configurable
+var objectPath = require('object-path');
+var assert = require('assert');
 
 module.exports = {
   /**
    * @param  {Array[Object]} files
    * @return {Array}
    */
-  compare: function (files) {
-    var filesObjects = files.map(function (obj) {
-      var fileContent = PRE + fs.readFileSync(obj.filepath).toString('utf8') + POST;
-      return obj.extract(eval(fileContent));
+  compare: function (pre, files, post) {
+    var filesObjects = files.map(function (file) {
+      assert.strictEqual(typeof file.objectPath, 'string');
+      var fileContent = pre + file.content + post;
+      return objectPath.get(eval(fileContent), file.objectPath);
     });
 
     var filesKeys = filesObjects.map(function (obj) {

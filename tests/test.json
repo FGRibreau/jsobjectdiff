@@ -1,0 +1,14 @@
+{
+  "files": [
+    [
+      "./fixtures/en_US.js",
+      "i18n.en_US"
+    ],
+    [
+      "./fixtures/fr_FR.js",
+      "i18n.fr_FR"
+    ]
+  ],
+  "pre": "(function (Bringr) {",
+  "post": "return Bringr;})({});"
+}

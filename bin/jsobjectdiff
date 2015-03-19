@@ -1,34 +1,62 @@
 #!/usr/bin/env node
 
+'use strict';
+
 var jsobjectDiff = require('../');
 var _ = require('lodash');
+var fs = require('fs');
+var path = require('path');
+var when = require('when');
 
-function collect(val, memo) {
-  memo.push(val);
-  return memo;
-}
+var program = require('commander');
 
-var files = _.rest(process.argv, 3);
+var opts = require('nomnom')
+  .option('config', {
+    abbr: 'c',
+    required: true,
+    help: 'JSON configuration path'
+  })
+  .parse();
 
-if (!files || !Array.isArray(files)) {
-  console.log('files should be defined');
-  process.exit(1);
-}
 
-var filesWithExtract = files.map(function (filepath) {
-  return {
-    filepath: filepath,
-    extract: function (object) {
-      return object.i18n[_.first(_.last(filepath.split('/')).split('.'))];
-    }
-  };
-});
+var FULL_CONFIG_PATH = path.resolve(process.cwd(), opts.config);
 
-var diff = jsobjectDiff.compare(filesWithExtract);
-if (diff.length === 0) {
-  process.exit(0);
-}
+when
+  .promise(function (resolve, reject) {
+    fs.readFile(FULL_CONFIG_PATH, 'utf8', function (err, data) {
+      if (err) {
+        reject(err);
+        return;
+      }
 
-console.log('Diff : ');
-console.log(JSON.stringify(diff, null, 2));
-process.exit(diff.length);
+      resolve(data);
+    });
+  })
+  .then(function onSuccess(data) {
+    when.try(JSON.parse, data).then(function onSuccess(json) {
+
+      var configuration = json.files.map(function (file) {
+        var absolutePath = path.resolve(path.dirname(FULL_CONFIG_PATH), file.filePath);
+        return {
+          objectPath: file.objectPath,
+          content: fs.readFileSync(absolutePath).toString('utf8')
+        };
+      });
+
+      var diff = jsobjectDiff.compare(json.pre, configuration, json.post);
+
+      if (diff.length === 0) {
+        process.exit(0);
+      }
+
+      console.info('Diff:', JSON.stringify(diff, null, 2));
+      process.exit(diff.length);
+
+    }, function onError(err) {
+      console.error('Could not parse %s', FULL_CONFIG_PATH);
+      console.error(err);
+    });
+  }, function onError(err) {
+    console.error('Could not open %s', FULL_CONFIG_PATH);
+    console.error(err);
+  });
