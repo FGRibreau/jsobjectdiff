@@ -15,10 +15,50 @@ module.exports = {
       return objectPath.get(eval(fileContent), file.objectPath);
     });
 
-    var filesKeys = filesObjects.map(function (obj) {
-      return Object.keys(obj);
+    var filesKeys = filesObjects.map(function(obj, index) {
+      return {
+        filePath: files[index].filePath,
+        objectPath: files[index].objectPath,
+        fileKeys: Object.keys(obj)
+      }
     });
 
-    return _.union(_.difference.apply(_, filesKeys), _.difference.apply(_, filesKeys.reverse()));
+    return filesKeys.map(function(obj) {
+      return {
+        filePath: obj.filePath,
+        objectPath: obj.objectPath,
+        comparedTo: _.flatten(filesKeys.map(function(otherObj){
+          if(obj.filePath == otherObj.filePath && obj.objectPath == otherObj.objectPath){
+            return []
+          }
+          return {
+            filePath: otherObj.filePath,
+            objectPath: otherObj.objectPath,
+            inPlus: _.flatten(_.difference(obj.fileKeys, otherObj.fileKeys).map(function(differenceKeys){
+              return _.flatten(obj.fileKeys.map(function(objKey, index){
+                if(objKey == differenceKeys){
+                  return {
+                    key: objKey,
+                    index: index
+                  }
+                }
+                return []
+              }))
+            })),
+            inLess: _.flatten(_.difference(otherObj.fileKeys, obj.fileKeys).map(function(differenceKeys){
+              return _.flatten(otherObj.fileKeys.map(function(objKey, index){
+                if(objKey == differenceKeys){
+                  return {
+                    key: objKey,
+                    index: index
+                  }
+                }
+                return []
+              }))
+            }))
+          }
+        }))
+      }
+    })
   }
 };

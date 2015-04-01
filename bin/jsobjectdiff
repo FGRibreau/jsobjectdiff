@@ -7,8 +7,7 @@ var _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
 var when = require('when');
-
-var program = require('commander');
+var Table = require('cli-table');
 
 var opts = require('nomnom')
   .option('config', {
@@ -22,8 +21,8 @@ var opts = require('nomnom')
 var FULL_CONFIG_PATH = path.resolve(process.cwd(), opts.config);
 
 when
-  .promise(function (resolve, reject) {
-    fs.readFile(FULL_CONFIG_PATH, 'utf8', function (err, data) {
+  .promise(function(resolve, reject) {
+    fs.readFile(FULL_CONFIG_PATH, 'utf8', function(err, data) {
       if (err) {
         reject(err);
         return;
@@ -35,9 +34,10 @@ when
   .then(function onSuccess(data) {
     when.try(JSON.parse, data).then(function onSuccess(json) {
 
-      var configuration = json.files.map(function (file) {
+      var configuration = json.files.map(function(file) {
         var absolutePath = path.resolve(path.dirname(FULL_CONFIG_PATH), file.filePath);
         return {
+          filePath: file.filePath,
           objectPath: file.objectPath,
           content: fs.readFileSync(absolutePath).toString('utf8')
         };
@@ -48,8 +48,27 @@ when
       if (diff.length === 0) {
         process.exit(0);
       }
-
-      console.info('Diff:', JSON.stringify(diff, null, 2));
+      var table = new Table();
+      diff.map(function(objectFiles) {
+        table.push(['filePath', 'objectPath']);
+        table.push([objectFiles.filePath, objectFiles.objectPath]);
+        objectFiles.comparedTo.map(function(comparaison) {
+          table.push(['Compared with : ' + comparaison.filePath + ' ' + comparaison.objectPath]);
+          table.push(['comparaison', 'key', 'index']);
+          comparaison.inPlus.map(function(keyAndIndex) {
+            table.push({
+              'inPlus': [keyAndIndex.key, keyAndIndex.index]
+            })
+          });
+          comparaison.inLess.map(function(keyAndIndex) {
+            table.push({
+              'inLess': [keyAndIndex.key, keyAndIndex.index]
+            })
+          });
+        })
+        table.push()
+      })
+      console.log(table.toString());
       process.exit(diff.length);
 
     }, function onError(err) {
