@@ -21,8 +21,8 @@ var opts = require('nomnom')
 var FULL_CONFIG_PATH = path.resolve(process.cwd(), opts.config);
 
 when
-  .promise(function(resolve, reject) {
-    fs.readFile(FULL_CONFIG_PATH, 'utf8', function(err, data) {
+  .promise(function (resolve, reject) {
+    fs.readFile(FULL_CONFIG_PATH, 'utf8', function (err, data) {
       if (err) {
         reject(err);
         return;
@@ -34,12 +34,12 @@ when
   .then(function onSuccess(data) {
     when.try(JSON.parse, data).then(function onSuccess(json) {
 
-      var configuration = json.files.map(function(file) {
+      var configuration = json.files.map(function (file) {
         var absolutePath = path.resolve(path.dirname(FULL_CONFIG_PATH), file.filePath);
         return {
           filePath: file.filePath,
           objectPath: file.objectPath,
-          content: fs.readFileSync(absolutePath).toString('utf8')
+          content: fs.readFileSync(absolutePath, 'utf-8')
         };
       });
 
@@ -49,11 +49,11 @@ when
         process.exit(0);
       }
       var table = new Table();
-      diff.map(function(objectFiles) {
-        objectFiles.comparedTo.map(function(comparaison) {
-          comparaison.inPlus.map(function(keyAndIndex) {
+      diff.map(function (objectFiles) {
+        objectFiles.comparedTo.map(function (comparaison) {
+          comparaison.inPlus.map(function (keyAndIndex) {
             var content = fs.readFileSync(path.resolve(path.dirname(FULL_CONFIG_PATH), objectFiles.filePath)).toString('utf8');
-            var line = _.findIndex(content.split('\n'), function(line) {
+            var line = _.findIndex(content.split('\n'), function (line) {
               return line.indexOf(keyAndIndex.key) !== -1;
             });
             var key = keyAndIndex.key;
@@ -61,9 +61,9 @@ when
             var objectPath = comparaison.objectPath;
             table.push(['+ ' + key + ' to the line ' + line + ' of ' + filePath + ' ' + objectPath]);
           });
-          comparaison.inLess.map(function(keyAndIndex) {
+          comparaison.inLess.map(function (keyAndIndex) {
             var content = fs.readFileSync(path.resolve(path.dirname(FULL_CONFIG_PATH), comparaison.filePath)).toString('utf8');
-            var line = _.findIndex(content.split('\n'), function(line) {
+            var line = _.findIndex(content.split('\n'), function (line) {
               return line.indexOf(keyAndIndex.key) !== -1;
             });
             var key = keyAndIndex.key;
@@ -71,8 +71,8 @@ when
             var objectPath = objectFiles.objectPath;
             table.push(['- ' + key + ' to the line ' + line + ' of ' + filePath + ' ' + objectPath]);
           });
-        })
-      })
+        });
+      });
       console.log(table.toString());
       process.exit(diff.length);
 
