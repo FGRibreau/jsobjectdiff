@@ -50,20 +50,14 @@ when
       }
       var table = new Table();
       diff.map(function(objectFiles) {
-        table.push(['filePath', 'objectPath']);
-        table.push([objectFiles.filePath, objectFiles.objectPath]);
         objectFiles.comparedTo.map(function(comparaison) {
-          table.push(['Compared with : ' + comparaison.filePath + ' ' + comparaison.objectPath]);
-          table.push(['comparaison', 'key', 'index']);
           comparaison.inPlus.map(function(keyAndIndex) {
-            table.push({
-              'inPlus': [keyAndIndex.key, keyAndIndex.index]
-            })
+            var index = keyAndIndex.index + 1;
+            table.push(['+ ' + keyAndIndex.key + ' to the index ' + index + ' of ' + comparaison.filePath + ' ' + comparaison.objectPath]);
           });
           comparaison.inLess.map(function(keyAndIndex) {
-            table.push({
-              'inLess': [keyAndIndex.key, keyAndIndex.index]
-            })
+            var index = keyAndIndex.index + 1;
+            table.push(['- ' + keyAndIndex.key + ' to the index ' + index + ' of'+ objectFiles.filePath + ' ' + objectFiles.objectPath]);
           });
         })
         table.push()
