@@ -51,7 +51,7 @@ when
       var table = new Table();
       diff.map(function (objectFiles) {
         objectFiles.comparedTo.map(function (comparaison) {
-          comparaison.inPlus.map(function (keyAndIndex) {
+          comparaison.added.map(function (keyAndIndex) {
             var content = fs.readFileSync(path.resolve(path.dirname(FULL_CONFIG_PATH), objectFiles.filePath)).toString('utf8');
             var line = _.findIndex(content.split('\n'), function (line) {
               return line.indexOf(keyAndIndex.key) !== -1;
@@ -61,7 +61,7 @@ when
             var objectPath = comparaison.objectPath;
             table.push(['+ ' + key + ' to the line ' + line + ' of ' + filePath + ' ' + objectPath]);
           });
-          comparaison.inLess.map(function (keyAndIndex) {
+          comparaison.removed.map(function (keyAndIndex) {
             var content = fs.readFileSync(path.resolve(path.dirname(FULL_CONFIG_PATH), comparaison.filePath)).toString('utf8');
             var line = _.findIndex(content.split('\n'), function (line) {
               return line.indexOf(keyAndIndex.key) !== -1;
