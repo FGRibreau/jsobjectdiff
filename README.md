@@ -28,9 +28,9 @@ make this configurable
 }
 ```
 
-post: retourne l'objet
-files: an array of 
-placer les fichiers a comparer dans le dossier fixtures
+* post: retourne l'objet
+* files: an array of (placer les fichiers a comparer dans le dossier fixtures)
+
 
 
 ### USE
