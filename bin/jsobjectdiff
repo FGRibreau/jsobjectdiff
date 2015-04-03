@@ -52,15 +52,26 @@ when
       diff.map(function(objectFiles) {
         objectFiles.comparedTo.map(function(comparaison) {
           comparaison.inPlus.map(function(keyAndIndex) {
-            var index = keyAndIndex.index + 1;
-            table.push(['+ ' + keyAndIndex.key + ' to the index ' + index + ' of ' + comparaison.filePath + ' ' + comparaison.objectPath]);
+            var content = fs.readFileSync(path.resolve(path.dirname(FULL_CONFIG_PATH), objectFiles.filePath)).toString('utf8');
+            var line = _.findIndex(content.split('\n'), function(line) {
+              return line.indexOf(keyAndIndex.key) !== -1;
+            });
+            var key = keyAndIndex.key;
+            var filePath = comparaison.filePath;
+            var objectPath = comparaison.objectPath;
+            table.push(['+ ' + key + ' to the line ' + line + ' of ' + filePath + ' ' + objectPath]);
           });
           comparaison.inLess.map(function(keyAndIndex) {
-            var index = keyAndIndex.index + 1;
-            table.push(['- ' + keyAndIndex.key + ' to the index ' + index + ' of'+ objectFiles.filePath + ' ' + objectFiles.objectPath]);
+            var content = fs.readFileSync(path.resolve(path.dirname(FULL_CONFIG_PATH), comparaison.filePath)).toString('utf8');
+            var line = _.findIndex(content.split('\n'), function(line) {
+              return line.indexOf(keyAndIndex.key) !== -1;
+            });
+            var key = keyAndIndex.key;
+            var filePath = objectFiles.filePath;
+            var objectPath = objectFiles.objectPath;
+            table.push(['- ' + key + ' to the line ' + line + ' of ' + filePath + ' ' + objectPath]);
           });
         })
-        table.push()
       })
       console.log(table.toString());
       process.exit(diff.length);
