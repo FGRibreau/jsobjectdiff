@@ -21,8 +21,8 @@ var opts = require('nomnom')
 var FULL_CONFIG_PATH = path.resolve(process.cwd(), opts.config);
 
 when
-  .promise(function (resolve, reject) {
-    fs.readFile(FULL_CONFIG_PATH, 'utf8', function (err, data) {
+  .promise(function(resolve, reject) {
+    fs.readFile(FULL_CONFIG_PATH, 'utf8', function(err, data) {
       if (err) {
         reject(err);
         return;
@@ -34,7 +34,7 @@ when
   .then(function onSuccess(data) {
     when.try(JSON.parse, data).then(function onSuccess(json) {
 
-      var configuration = json.files.map(function (file) {
+      var configuration = json.files.map(function(file) {
         var absolutePath = path.resolve(path.dirname(FULL_CONFIG_PATH), file.filePath);
         return {
           filePath: file.filePath,
@@ -48,32 +48,29 @@ when
       if (diff.length === 0) {
         process.exit(0);
       }
-      var table = new Table();
-      diff.map(function (objectFiles) {
-        objectFiles.comparedTo.map(function (comparaison) {
-          comparaison.added.map(function (keyAndIndex) {
-            var content = fs.readFileSync(path.resolve(path.dirname(FULL_CONFIG_PATH), objectFiles.filePath)).toString('utf8');
-            var line = _.findIndex(content.split('\n'), function (line) {
-              return line.indexOf(keyAndIndex.key) !== -1;
-            });
-            var key = keyAndIndex.key;
-            var filePath = comparaison.filePath;
-            var objectPath = comparaison.objectPath;
-            table.push(['+ ' + key + ' to the line ' + line + ' of ' + filePath + ' ' + objectPath]);
-          });
-          comparaison.removed.map(function (keyAndIndex) {
-            var content = fs.readFileSync(path.resolve(path.dirname(FULL_CONFIG_PATH), comparaison.filePath)).toString('utf8');
-            var line = _.findIndex(content.split('\n'), function (line) {
-              return line.indexOf(keyAndIndex.key) !== -1;
-            });
-            var key = keyAndIndex.key;
-            var filePath = objectFiles.filePath;
-            var objectPath = objectFiles.objectPath;
-            table.push(['- ' + key + ' to the line ' + line + ' of ' + filePath + ' ' + objectPath]);
-          });
-        });
+      diff.map(function(objectFiles) {
+        var lines = objectFiles.comparedTo.reduce(function(memo, comparedFile) {
+          return comparedFile.added.reduce(function(memo, key) {
+            memo.push(key.line);
+            return memo
+          }, memo)
+        }, [])
+
+        var keys = objectFiles.comparedTo.reduce(function(memo, comparedFile) {
+          return comparedFile.added.reduce(function(memo, key) {
+            memo.push(key.key);
+            return memo
+          }, memo)
+        }, [])
+
+        console.log('The file ' + objectFiles.file.path + ' have ' + lines.length + ' key(s) added line(s) : ' + lines.sort(function(a, b) {
+          return a - b
+        }).join(", "))
+
+        if(keys){
+          console.log('Keys : ' + keys.join(", "))
+        }
       });
-      console.log(table.toString());
       process.exit(diff.length);
 
     }, function onError(err) {
