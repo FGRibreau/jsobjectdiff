@@ -7,6 +7,13 @@
     "test": "mocha tests/*.test.js"
   },
   "author": "Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com/)",
+  "contributors": [{
+    "name": "Nicolas Bruel",
+    "email": "bruel.nicolas85@gmail.com"
+  }, {
+    "name": "Laura Felix",
+    "email": "laura.felix.loratus@gmail.com"
+  }],
   "license": "MIT",
   "dependencies": {
     "cli-table": "^0.3.1",
