@@ -45,24 +45,13 @@ return an error if the files are not matching
 difference between two file
 
 ```javascript
-  {
-    "filePath": "/www/jsobjectdiff/tests/test.json",
-    "objectPath": "i18n.en_US",
-    "inPlus": [
-      "SEARCH_TEMPLATE_INTRO"
-    ],
-    "inLess": [
-      "SEARCH_SOURCES_RESERVED_INTRO"
-    ]
-  },
-  {
-    "filePath": "/www/jsobjectdiff/tests/test.json",
-    "objectPath": "i18n.fr_FR",
-    "inPlus": [
-      "SEARCH_SOURCES_RESERVED_INTRO"
-    ],
-    "inLess": [
-      "SEARCH_TEMPLATE_INTRO"
-    ]
-  }
+  The file ./fixtures/en_US.js have 1 key(s) added line(s) : 6
+  Keys : SEARCH_TEMPLATE_INTRO
+  The file ./fixtures/fr_FR.js have 1 key(s) added line(s) : 6
+  Keys : SEARCH_SOURCES_RESERVED_INTRO
+
 ```
+
+### CONTRIBUTORS
+
+Laura Felix <laura.felix.loratus@gmail.com>, Nicolas Bruel <bruel.nicolas85@gmail.com>, authored by Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com/)
