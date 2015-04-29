@@ -1,21 +1,31 @@
 {
   "name": "jsobjectdiff",
-  "version": "0.0.9",
+  "version": "1.0.0",
   "description": "Ensure that two JavaScript files containing objects have the same keys and display differences",
   "main": "compare.js",
   "scripts": {
     "test": "mocha tests/*.test.js",
     "ci": "check-build && npm run test"
   },
-  "keywords": ["filediff", "diff", "file", "fs", "tool", "object"],
+  "keywords": [
+    "filediff",
+    "diff",
+    "file",
+    "fs",
+    "tool",
+    "object"
+  ],
   "author": "Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com/)",
-  "contributors": [{
-    "name": "Nicolas Bruel",
-    "email": "bruel.nicolas85@gmail.com"
-  }, {
-    "name": "Laura Felix",
-    "email": "laura.felix.loratus@gmail.com"
-  }],
+  "contributors": [
+    {
+      "name": "Nicolas Bruel",
+      "email": "bruel.nicolas85@gmail.com"
+    },
+    {
+      "name": "Laura Felix",
+      "email": "laura.felix.loratus@gmail.com"
+    }
+  ],
   "license": "MIT",
   "dependencies": {
     "cli-table": "^0.3.1",
