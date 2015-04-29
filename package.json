@@ -7,6 +7,9 @@
     "test": "mocha tests/*.test.js",
     "ci": "check-build && npm run test"
   },
+  "bin": {
+    "jsobjectdiff": "./bin/jsobjectdiff"
+  },
   "keywords": [
     "filediff",
     "diff",
