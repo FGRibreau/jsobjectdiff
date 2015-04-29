@@ -59,4 +59,6 @@ Where the configuration file must be something like:
 
 ### Contributors
 
-Laura Felix <laura.felix.loratus@gmail.com>, Nicolas Bruel <bruel.nicolas85@gmail.com>, authored by Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com/)
+* Laura Felix <laura.felix.loratus[$-at-$]gmail.com>
+* Nicolas Bruel <bruel.nicolas85[$-at-$]gmail.com>
+* Francois-Guillaume Ribreau <npm[$-at-$]fgribreau.com> (http://fgribreau.com/)
