@@ -1,11 +1,13 @@
 {
   "name": "jsobjectdiff",
   "version": "1.0.0",
-  "description": "compare object files",
+  "description": "Ensure that two JavaScript files containing objects have the same keys and display differences",
   "main": "compare.js",
   "scripts": {
-    "test": "mocha tests/*.test.js"
+    "test": "mocha tests/*.test.js",
+    "ci": "check-build && npm run test"
   },
+  "keywords": ["filediff", "diff", "file", "fs", "tool", "object"],
   "author": "Francois-Guillaume Ribreau <npm@fgribreau.com> (http://fgribreau.com/)",
   "contributors": [{
     "name": "Nicolas Bruel",
@@ -22,10 +24,11 @@
     "object-path": "^0.9.0",
     "optimist": "^0.6.1",
     "when": "^3.7.2",
-    "winston": "^0.9.0"
+    "winston": "1.*.*"
   },
   "devDependencies": {
     "chai": "^1.10.0",
-    "mocha": "^2.0.1"
+    "mocha": "^2.0.1",
+    "check-build": "*"
   }
 }
