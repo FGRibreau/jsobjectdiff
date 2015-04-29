@@ -1,6 +1,6 @@
 {
   "name": "jsobjectdiff",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Ensure that two JavaScript files containing objects have the same keys and display differences",
   "main": "compare.js",
   "scripts": {
