@@ -1,5 +1,4 @@
-# jsobjectdiff [![Build Status](https://drone.io/github.com/FGRibreau/jsobjectdiff/status.png)](https://drone.io/github.com/FGRibreau/jsobjectdiff/latest) [![Deps](https://david-dm.org/FGRibreau/jsobjectdiff.png)](https://david-dm.org/FGRibreau/jsobjectdiff)
-[![Version](http://badge.fury.io/js/jsobjectdiff.png)](https://david-dm.org/FGRibreau/jsobjectdiff)
+# jsobjectdiff [![Build Status](https://drone.io/github.com/FGRibreau/jsobjectdiff/status.png)](https://drone.io/github.com/FGRibreau/jsobjectdiff/latest) [![Deps](https://david-dm.org/FGRibreau/jsobjectdiff.png)](https://david-dm.org/FGRibreau/jsobjectdiff) [![Version](http://badge.fury.io/js/jsobjectdiff.png)](https://david-dm.org/FGRibreau/jsobjectdiff)
 ----------------------------
 
 Ensure that two JavaScript files containing objects have the same keys and display differences.
