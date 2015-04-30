@@ -62,13 +62,14 @@ when
             return memo
           }, memo)
         }, [])
-
-        console.log('The file ' + objectFiles.file.path + ' have ' + lines.length + ' key(s) added line(s) : ' + lines.sort(function(a, b) {
-          return a - b
-        }).join(", "))
-
-        if(keys){
-          console.log('Keys : ' + keys.join(", "))
+        if(lines.length){
+          console.log('The file ' + objectFiles.file.path + ' have ' + lines.length + ' key(s) added line(s) : ' + _.uniq(lines.sort(), true));
+        }
+        else{
+          console.log('The file ' + objectFiles.file.path + ' have ' + lines.length + ' key added');
+        }
+        if(keys.length){
+          console.log('Keys : ' + _.uniq(keys.sort(), true));
         }
       });
       process.exit(diff.length);
