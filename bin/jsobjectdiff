@@ -49,27 +49,27 @@ when
         process.exit(0);
       }
       diff.map(function(objectFiles) {
-        var lines = objectFiles.comparedTo.reduce(function(memo, comparedFile) {
+        var lines = _.uniq(objectFiles.comparedTo.reduce(function(memo, comparedFile) {
           return comparedFile.added.reduce(function(memo, key) {
             memo.push(key.line);
             return memo
           }, memo)
-        }, [])
+        }, []).sort(), true);
 
-        var keys = objectFiles.comparedTo.reduce(function(memo, comparedFile) {
+        var keys = _.uniq(objectFiles.comparedTo.reduce(function(memo, comparedFile) {
           return comparedFile.added.reduce(function(memo, key) {
             memo.push(key.key);
             return memo
           }, memo)
-        }, [])
+        }, []).sort(), true)
         if(lines.length){
-          console.log('The file ' + objectFiles.file.path + ' have ' + lines.length + ' key(s) added line(s) : ' + _.uniq(lines.sort(), true));
+          console.log('The file ' + objectFiles.file.path + ' have ' + lines.length + ' key(s) added line(s) : ' + lines.join(", "));
         }
         else{
           console.log('The file ' + objectFiles.file.path + ' have ' + lines.length + ' key added');
         }
         if(keys.length){
-          console.log('Keys : ' + _.uniq(keys.sort(), true));
+          console.log('Keys : ' + keys.join(", "));
         }
       });
       process.exit(diff.length);
